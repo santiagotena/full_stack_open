@@ -44,12 +44,12 @@ const Statistics = ({good, neutral, bad}) => {
   return(
     <table>
       <tbody>
-        <StatisticLine text='good' value={good} ></StatisticLine>
-        <StatisticLine text='neutral' value={neutral} ></StatisticLine>
-        <StatisticLine text='bad' value={bad} ></StatisticLine>
-        <StatisticLine text='all' value={all} ></StatisticLine>
-        <StatisticLine text='average' value={average} ></StatisticLine>
-        <StatisticLine text='positive' value={positive} ></StatisticLine>
+        <StatisticLine text='good' value={good}/>
+        <StatisticLine text='neutral' value={neutral}/>
+        <StatisticLine text='bad' value={bad}/>
+        <StatisticLine text='all' value={all}/>
+        <StatisticLine text='average' value={average}/>
+        <StatisticLine text='positive' value={positive}/>
       </tbody>
     </table>
   )
@@ -77,12 +77,12 @@ const App = () => {
   
   return (
     <div>
-      <Header text = 'give feedback'></Header>
-      <Button handleClick={handleGood} text={'good'}></Button>
-      <Button handleClick={handleNeutral} text={'neutral'}></Button>
-      <Button handleClick={handleBad} text={'bad'}></Button>
-      <Header text = 'statistics'></Header>
-      <Statistics good={good} neutral={neutral} bad={bad}></Statistics>
+      <Header text = 'give feedback'/>
+      <Button handleClick={handleGood} text={'good'}/>
+      <Button handleClick={handleNeutral} text={'neutral'}/>
+      <Button handleClick={handleBad} text={'bad'}/>
+      <Header text = 'statistics'/>
+      <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
