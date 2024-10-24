@@ -6,6 +6,12 @@ const Anecdote = ({anecdote}) => {
   )
 }
 
+const DisplayVotes = ({votes}) => {
+  return(
+    <div>has {votes} votes</div>
+  )
+}
+
 const Button = ({handleClick, text}) => {
   return(
     <button onClick={handleClick}>{text}</button>
@@ -25,6 +31,7 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
   const handleNextAnecdote = () => {
     const length = anecdotes.length
@@ -32,9 +39,17 @@ const App = () => {
     setSelected(selectedIndex)
   }
 
+  const handleVote = () => {
+    const updatedVotes = [...votes]
+    updatedVotes[selected] += 1
+    setVotes(updatedVotes)
+  }
+
   return (
     <div>
       <Anecdote anecdote={anecdotes[selected]}/>
+      <DisplayVotes votes={votes[selected]}/>
+      <Button handleClick={handleVote} text={'vote'}/>
       <Button handleClick={handleNextAnecdote} text={'next anecdote'}/>
     </div>
   )
