@@ -46,13 +46,22 @@ const App = () => {
     setSelected(selectedIndex)
   }
 
-  const handleVote = () => {
+  const updateVotes = () => {
     const updatedVotes = [...votes]
     updatedVotes[selected] += 1
     setVotes(updatedVotes)
+    return updatedVotes
+  }
+
+  const updateHighestVoteIndex = (updatedVotes) => {
     const highestVote = Math.max(...updatedVotes)
     const updatedHighestVoteIndex = updatedVotes.indexOf(highestVote)
     setHighestVoteIndex(updatedHighestVoteIndex)
+  }
+
+  const handleVote = () => {
+    const updatedVotes = updateVotes()
+    updateHighestVoteIndex(updatedVotes)
   }
 
   return (
