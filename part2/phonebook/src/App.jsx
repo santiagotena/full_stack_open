@@ -1,43 +1,49 @@
 import { useState } from 'react'
 
-const Contact = ({name}) => {
+const Contact = ({contact}) => {
   return(
-    <div>{name}</div>
+    <div>{contact.name} {contact.number}</div>
   )
 }
 
 const App = () => {
-  const [contacts, setContacts] = useState([]) 
+  const [contacts, setContacts] = useState([
+    { id: 0, name: 'Arto Hellas', number: '040-123456'}
+  ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const addContact = (event) => {
     event.preventDefault()
-    if (newName === '')  {
+
+    if (newName === '' || newNumber === '')  {
       window.alert(`There is a blank field`)
-      setNewName('')
       return
     }
 
     for (let i = 0; i < contacts.length; i++) {
       if (contacts[i].name === newName)  {
         window.alert(`${newName} is already added to phonebook`)
-        setNewName('')
         return
       }
     }
-
+    
     const newContact = {
       id: String(contacts.length + 1),
       name: newName,
+      number: newNumber,
     }
-
     setContacts(contacts.concat(newContact))
     setNewName('')
+    setNewNumber('')
   }
 
   const handleNewName = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
+  }
+
+  const handleNewNumber = (event) => {
+    setNewNumber(event.target.value)
   }
 
   return (
@@ -50,6 +56,11 @@ const App = () => {
                   onChange={handleNewName}/>
         </div>
         <div>
+          number: <input 
+                  value={newNumber}
+                  onChange={handleNewNumber}/>
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
@@ -57,7 +68,7 @@ const App = () => {
       <div>
       </div>
       {contacts.map(contact =>
-        <Contact key={contact.id} name={contact.name} />
+        <Contact key={contact.id} contact={contact} />
       )}
     </div>
   )
