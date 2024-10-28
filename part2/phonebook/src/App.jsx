@@ -1,15 +1,27 @@
 import { useState } from 'react'
 
-const Contact = ({contact}) => {
+const Contacts = ({ contacts, searchName }) => {
+  const filteredContacts = contacts.filter(contact => 
+    contact.name.toLowerCase().includes(searchName.toLowerCase())
+  )
+
   return(
-    <div>{contact.name} {contact.number}</div>
+    <>
+      {filteredContacts.map(contact => (
+        <div key={contact.id}>{contact.name} {contact.number}</div>
+      ))}
+    </>
   )
 }
 
 const App = () => {
   const [contacts, setContacts] = useState([
-    { id: 0, name: 'Arto Hellas', number: '040-123456'}
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
+  const [searchName, setSearchName] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
@@ -21,11 +33,9 @@ const App = () => {
       return
     }
 
-    for (let i = 0; i < contacts.length; i++) {
-      if (contacts[i].name === newName)  {
-        window.alert(`${newName} is already added to phonebook`)
-        return
-      }
+    if (contacts.some(contact => contact.name === newName)) {
+      window.alert(`${newName} is already added to phonebook`)
+      return
     }
     
     const newContact = {
@@ -46,9 +56,21 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleSearchName = (event) => {
+    setSearchName(event.target.value)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <form onSubmit={addContact} >
+        <div>
+          filter shown with <input 
+                  value={searchName}
+                  onChange={handleSearchName}/>
+        </div>
+      </form>
+      <h2>add a new</h2>
       <form onSubmit={addContact} >
         <div>
           name: <input 
@@ -67,9 +89,7 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
       </div>
-      {contacts.map(contact =>
-        <Contact key={contact.id} contact={contact} />
-      )}
+      <Contacts contacts={contacts} searchName={searchName}/>
     </div>
   )
 }
