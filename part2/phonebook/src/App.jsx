@@ -1,38 +1,38 @@
 import { useState } from 'react'
 
-const InputField = ({inputName, value, onChange}) => {
+const InputField = ({ label, inputValue, onInputChange }) => {
   return(
     <div>
-      {inputName} <input 
-                value={value}
-                onChange={onChange}/> 
+      {label} <input 
+                value={inputValue}
+                onChange={onInputChange}/> 
     </div>
   )
 }
 
-const FilterContact = ({value, onChange}) => {
+const FilterContact = ({ filterValue, onFilterChange }) => {
   return (
     <form>
-      <InputField inputName={'filter shown with'}
-                  value={value}
-                  onChange={onChange}/>
+      <InputField label={'filter shown with'}
+                  inputValue={filterValue}
+                  onInputChange={onFilterChange}/>
     </form>
   )
 }
 
-const AddContactForm = ({onSubmit, 
-                        nameValue, 
-                        nameOnChange, 
-                        numberValue, 
-                        numberOnChange}) => {
+const AddContactForm = ({ onSubmit, 
+                          nameValue, 
+                          onNameChange, 
+                          numberValue, 
+                          onNumberChange }) => {
   return(
     <form onSubmit={onSubmit} >
-      <InputField inputName={'name'}
-                  value={nameValue}
-                  onChange={nameOnChange}/>
-      <InputField inputName={'number'}
-                  value={numberValue}
-                  onChange={numberOnChange}/>
+      <InputField label={'name:'}
+                  inputValue={nameValue}
+                  onInputChange={onNameChange}/>
+      <InputField label={'number:'}
+                  inputValue={numberValue}
+                  onInputChange={onNumberChange}/>
       <div>
         <button type="submit">add</button>
       </div>
@@ -40,9 +40,9 @@ const AddContactForm = ({onSubmit,
   )
 }
 
-const Contacts = ({ contacts, searchName }) => {
+const Contacts = ({ contacts, filterName }) => {
   const filteredContacts = contacts.filter(contact => 
-    contact.name.toLowerCase().includes(searchName.toLowerCase())
+    contact.name.toLowerCase().includes(filterName.toLowerCase())
   )
 
   return(
@@ -61,7 +61,7 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
-  const [searchName, setSearchName] = useState('')
+  const [filterName, setFilterName] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
@@ -69,7 +69,7 @@ const App = () => {
     event.preventDefault()
 
     if (newName === '' || newNumber === '')  {
-      window.alert(`There is a blank field`)
+      window.alert(`Please fill in all fields`)
       return
     }
 
@@ -88,30 +88,30 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleSearchName = (event) => {
-    setSearchName(event.target.value)
+  const handleFilterChange = (event) => {
+    setFilterName(event.target.value)
   }
 
-  const handleNewName = (event) => {
+  const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
 
-  const handleNewNumber = (event) => {
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <FilterContact value={searchName} onChange={handleSearchName}/>
-      <h3>add a new</h3>
+      <FilterContact filterValue={filterName} onFilterChange={handleFilterChange}/>
+      <h3>Add a new</h3>
       <AddContactForm onSubmit={addContact}
                       nameValue={newName}
-                      nameOnChange={handleNewName}
+                      onNameChange={handleNameChange}
                       numberValue={newNumber}
-                      numberOnChange={handleNewNumber} />
+                      onNumberChange={handleNumberChange} />
       <h3>Numbers</h3>
-      <Contacts contacts={contacts} searchName={searchName}/>
+      <Contacts contacts={contacts} filterName={filterName}/>
     </div>
   )
 }
