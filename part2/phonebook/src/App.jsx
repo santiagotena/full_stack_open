@@ -1,5 +1,45 @@
 import { useState } from 'react'
 
+const InputField = ({inputName, value, onChange}) => {
+  return(
+    <div>
+      {inputName} <input 
+                value={value}
+                onChange={onChange}/> 
+    </div>
+  )
+}
+
+const FilterContact = ({value, onChange}) => {
+  return (
+    <form>
+      <InputField inputName={'filter shown with'}
+                  value={value}
+                  onChange={onChange}/>
+    </form>
+  )
+}
+
+const AddContactForm = ({onSubmit, 
+                        nameValue, 
+                        nameOnChange, 
+                        numberValue, 
+                        numberOnChange}) => {
+  return(
+    <form onSubmit={onSubmit} >
+      <InputField inputName={'name'}
+                  value={nameValue}
+                  onChange={nameOnChange}/>
+      <InputField inputName={'number'}
+                  value={numberValue}
+                  onChange={numberOnChange}/>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
 const Contacts = ({ contacts, searchName }) => {
   const filteredContacts = contacts.filter(contact => 
     contact.name.toLowerCase().includes(searchName.toLowerCase())
@@ -48,6 +88,10 @@ const App = () => {
     setNewNumber('')
   }
 
+  const handleSearchName = (event) => {
+    setSearchName(event.target.value)
+  }
+
   const handleNewName = (event) => {
     setNewName(event.target.value)
   }
@@ -56,39 +100,17 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  const handleSearchName = (event) => {
-    setSearchName(event.target.value)
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addContact} >
-        <div>
-          filter shown with <input 
-                  value={searchName}
-                  onChange={handleSearchName}/>
-        </div>
-      </form>
-      <h2>add a new</h2>
-      <form onSubmit={addContact} >
-        <div>
-          name: <input 
-                  value={newName}
-                  onChange={handleNewName}/>
-        </div>
-        <div>
-          number: <input 
-                  value={newNumber}
-                  onChange={handleNewNumber}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-      </div>
+      <FilterContact value={searchName} onChange={handleSearchName}/>
+      <h3>add a new</h3>
+      <AddContactForm onSubmit={addContact}
+                      nameValue={newName}
+                      nameOnChange={handleNewName}
+                      numberValue={newNumber}
+                      numberOnChange={handleNewNumber} />
+      <h3>Numbers</h3>
       <Contacts contacts={contacts} searchName={searchName}/>
     </div>
   )
