@@ -27,8 +27,27 @@ const App = () => {
     }
 
     if (contacts.some(contact => contact.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-      return
+      const message = `${newName} is already added to the phonebook, replace the old number with the new one?`
+      if (window.confirm(message)) {
+        const contact = contacts.find(n => n.name === newName)
+        const id = contact.id
+        const changedContact = { ...contact, number: newNumber }
+
+        contactService
+          .update(id, changedContact)
+          .then(returnedContact => {
+            setContacts(contacts.map(contact => contact.id === id ? returnedContact : contact))
+          })
+          .catch(error => {
+            alert(
+              `The contact '${contact.name}' was already deleted from server`
+            )
+            setContacts(contacts.filter(n => n.id !== id))
+          })
+          setNewName('')
+          setNewNumber('')
+        return
+      }
     }
     
     const newContact = {
