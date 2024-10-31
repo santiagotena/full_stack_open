@@ -57,6 +57,17 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleDeleteContact = (id) => {
+    const contact = contacts.find(n => n.id === id)
+    if (window.confirm(`Delete ${contact.name}?`)) {
+      contactService
+        .remove(id)
+        .then(() => {
+          setContacts(contacts.filter(contact => contact.id !== id))
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -68,7 +79,9 @@ const App = () => {
                       numberValue={newNumber}
                       onNumberChange={handleNumberChange} />
       <h3>Numbers</h3>
-      <Contacts contacts={contacts} filterName={filterName}/>
+      <Contacts contacts={contacts} 
+                filterName={filterName} 
+                onDeleteContact={handleDeleteContact}/>
     </div>
   )
 }

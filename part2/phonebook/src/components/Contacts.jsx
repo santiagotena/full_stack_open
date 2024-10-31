@@ -1,4 +1,10 @@
-const Contacts = ({ contacts, filterName }) => {
+const DeleteButton = (handleClick) => {
+	return(
+		<button onClick={handleClick}>delete</button>
+	)
+}
+
+const Contacts = ({ contacts, filterName, onDeleteContact }) => {
   const filteredContacts = contacts.filter(contact => 
     contact.name.toLowerCase().includes(filterName.toLowerCase())
   )
@@ -6,7 +12,10 @@ const Contacts = ({ contacts, filterName }) => {
   return(
     <>
       {filteredContacts.map(contact => (
-        <div key={contact.id}>{contact.name} {contact.number}</div>
+				<div key={contact.id}>
+					{contact.name} {contact.number} {" "}
+					<button onClick={() => onDeleteContact(contact.id)}>delete</button>
+				</div>
       ))}
     </>
   )
