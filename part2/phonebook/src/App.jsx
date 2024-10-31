@@ -1,59 +1,9 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const InputField = ({ label, inputValue, onInputChange }) => {
-  return(
-    <div>
-      {label} <input 
-                value={inputValue}
-                onChange={onInputChange}/> 
-    </div>
-  )
-}
-
-const FilterContact = ({ filterValue, onFilterChange }) => {
-  return (
-    <form>
-      <InputField label={'filter shown with'}
-                  inputValue={filterValue}
-                  onInputChange={onFilterChange}/>
-    </form>
-  )
-}
-
-const AddContactForm = ({ onSubmit, 
-                          nameValue, 
-                          onNameChange, 
-                          numberValue, 
-                          onNumberChange }) => {
-  return(
-    <form onSubmit={onSubmit} >
-      <InputField label={'name:'}
-                  inputValue={nameValue}
-                  onInputChange={onNameChange}/>
-      <InputField label={'number:'}
-                  inputValue={numberValue}
-                  onInputChange={onNumberChange}/>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
-
-const Contacts = ({ contacts, filterName }) => {
-  const filteredContacts = contacts.filter(contact => 
-    contact.name.toLowerCase().includes(filterName.toLowerCase())
-  )
-
-  return(
-    <>
-      {filteredContacts.map(contact => (
-        <div key={contact.id}>{contact.name} {contact.number}</div>
-      ))}
-    </>
-  )
-}
+import FilterContact from './components/FilterContact'
+import AddContactForm from './components/AddContactForm'
+import Contacts from './components/Contacts'
 
 const App = () => {
   const [contacts, setContacts] = useState([]) 
