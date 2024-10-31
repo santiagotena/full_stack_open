@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-
+import contactService from './services/contacts'
 import FilterContact from './components/FilterContact'
 import AddContactForm from './components/AddContactForm'
 import Contacts from './components/Contacts'
@@ -12,10 +11,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setContacts(response.data)
+    contactService
+      .getAll()
+      .then(initialNotes => {
+        setContacts(initialNotes)
       })
   }, [])
 
@@ -33,13 +32,17 @@ const App = () => {
     }
     
     const newContact = {
-      id: String(contacts.length + 1),
       name: newName,
       number: newNumber,
     }
-    setContacts(contacts.concat(newContact))
-    setNewName('')
-    setNewNumber('')
+
+    contactService
+      .create(newContact)
+      .then(returnedContact => {
+        setContacts(contacts.concat(returnedContact))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleFilterChange = (event) => {
