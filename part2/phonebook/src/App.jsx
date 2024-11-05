@@ -3,12 +3,16 @@ import contactService from './services/contacts'
 import FilterContact from './components/FilterContact'
 import AddContactForm from './components/AddContactForm'
 import Contacts from './components/Contacts'
+import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [contacts, setContacts] = useState([]) 
   const [filterName, setFilterName] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     contactService
@@ -49,10 +53,16 @@ const App = () => {
             )
             setContacts(contacts.filter(n => n.id !== id))
           })
-          resetInputFields()
-          return
-        } else {
-          resetInputFields()
+        setNotificationMessage(
+          `Updated ${contact.name}`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 2000)
+        resetInputFields()
+        return
+      } else {
+        resetInputFields()
         return
       }
     }
@@ -68,6 +78,12 @@ const App = () => {
         setContacts(contacts.concat(returnedContact))
         resetInputFields()
       })
+    setNotificationMessage(
+      `Added ${newName}`
+    )
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 2000)
   }
 
   const handleFilterChange = (event) => {
@@ -90,12 +106,20 @@ const App = () => {
         .then(() => {
           setContacts(contacts.filter(contact => contact.id !== id))
         })
+      setNotificationMessage(
+        `Deleted ${contact.name}`
+      )
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 2000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
+      <ErrorNotification message={notificationMessage} />
       <FilterContact filterValue={filterName} onFilterChange={handleFilterChange}/>
       <h3>Add a new</h3>
       <AddContactForm onSubmit={addContact}
