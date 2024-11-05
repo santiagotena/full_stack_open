@@ -18,6 +18,11 @@ const App = () => {
       })
   }, [])
 
+  const resetInputFields = () => {
+    setNewName('')
+    setNewNumber('')
+  }
+
   const addContact = (event) => {
     event.preventDefault()
 
@@ -44,8 +49,10 @@ const App = () => {
             )
             setContacts(contacts.filter(n => n.id !== id))
           })
-          setNewName('')
-          setNewNumber('')
+          resetInputFields()
+          return
+        } else {
+          resetInputFields()
         return
       }
     }
@@ -59,8 +66,7 @@ const App = () => {
       .create(newContact)
       .then(returnedContact => {
         setContacts(contacts.concat(returnedContact))
-        setNewName('')
-        setNewNumber('')
+        resetInputFields()
       })
   }
 
