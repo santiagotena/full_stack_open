@@ -27,6 +27,22 @@ const App = () => {
     setNewNumber('')
   }
 
+  const triggerNotification = (message) => {
+    const milliseconds = 5000
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, milliseconds)
+  }
+
+  const triggerErrorNotification = (message) => {
+    const milliseconds = 5000
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, milliseconds)
+  }
+
   const addContact = (event) => {
     event.preventDefault()
 
@@ -46,21 +62,13 @@ const App = () => {
           .update(id, changedContact)
           .then(returnedContact => {
             setContacts(contacts.map(contact => contact.id === id ? returnedContact : contact))
-            setNotificationMessage(
-              `Updated ${contact.name}`
-            )
-            setTimeout(() => {
-              setNotificationMessage(null)
-            }, 2000)
+            const message = `Updated ${contact.name}`
+            triggerNotification(message)
           })
           .catch(error => {
             setContacts(contacts.filter(n => n.id !== id))
-            setErrorMessage(
-              `The contact '${contact.name}' has already been deleted from the server`
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 2000)
+            const message = `The contact '${contact.name}' has already been deleted from the server`
+            triggerErrorNotification(message)
           })
       }
       resetInputFields()
@@ -76,12 +84,8 @@ const App = () => {
       .create(newContact)
       .then(returnedContact => {
         setContacts(contacts.concat(returnedContact))
-        setNotificationMessage(
-          `Added ${newName}`
-        )
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 2000)
+        const message = `Added ${newName}`
+        triggerNotification(message)
       })
 
     resetInputFields()
@@ -106,21 +110,13 @@ const App = () => {
         .remove(id)
         .then(() => {
           setContacts(contacts.filter(contact => contact.id !== id))
-          setNotificationMessage(
-            `Deleted ${contact.name}`
-          )
-          setTimeout(() => {
-            setNotificationMessage(null)
-          }, 2000)
+          const message = `Deleted ${contact.name}`
+          triggerNotification(message)
         })
         .catch(error => {
           setContacts(contacts.filter(n => n.id !== id))
-          setErrorMessage(
-            `The contact '${contact.name}' has already been deleted from the server`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 2000)
+          const message = `The contact '${contact.name}' has already been deleted from the server`
+          triggerErrorNotification(message)
           return
         })
     }
