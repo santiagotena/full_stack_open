@@ -46,25 +46,25 @@ const App = () => {
           .update(id, changedContact)
           .then(returnedContact => {
             setContacts(contacts.map(contact => contact.id === id ? returnedContact : contact))
+            setNotificationMessage(
+              `Updated ${contact.name}`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 2000)
           })
           .catch(error => {
-            alert(
-              `The contact '${contact.name}' was already deleted from server`
-            )
             setContacts(contacts.filter(n => n.id !== id))
+            setErrorMessage(
+              `The contact '${contact.name}' has already been deleted from the server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2000)
           })
-        setNotificationMessage(
-          `Updated ${contact.name}`
-        )
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 2000)
-        resetInputFields()
-        return
-      } else {
-        resetInputFields()
-        return
       }
+      resetInputFields()
+      return
     }
     
     const newContact = {
@@ -76,14 +76,15 @@ const App = () => {
       .create(newContact)
       .then(returnedContact => {
         setContacts(contacts.concat(returnedContact))
-        resetInputFields()
+        setNotificationMessage(
+          `Added ${newName}`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 2000)
       })
-    setNotificationMessage(
-      `Added ${newName}`
-    )
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 2000)
+
+    resetInputFields()
   }
 
   const handleFilterChange = (event) => {
@@ -105,13 +106,23 @@ const App = () => {
         .remove(id)
         .then(() => {
           setContacts(contacts.filter(contact => contact.id !== id))
+          setNotificationMessage(
+            `Deleted ${contact.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 2000)
         })
-      setNotificationMessage(
-        `Deleted ${contact.name}`
-      )
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 2000)
+        .catch(error => {
+          setContacts(contacts.filter(n => n.id !== id))
+          setErrorMessage(
+            `The contact '${contact.name}' has already been deleted from the server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 2000)
+          return
+        })
     }
   }
 
@@ -119,7 +130,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notificationMessage} />
-      <ErrorNotification message={notificationMessage} />
+      <ErrorNotification message={errorMessage} />
       <FilterContact filterValue={filterName} onFilterChange={handleFilterChange}/>
       <h3>Add a new</h3>
       <AddContactForm onSubmit={addContact}
