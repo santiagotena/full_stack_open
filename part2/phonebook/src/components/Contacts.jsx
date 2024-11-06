@@ -1,9 +1,3 @@
-const DeleteButton = (handleClick) => {
-	return(
-		<button onClick={handleClick}>delete</button>
-	)
-}
-
 const Contacts = ({ contacts, filterName, onDeleteContact }) => {
   const filteredContacts = contacts.filter(contact => 
     contact.name.toLowerCase().includes(filterName.toLowerCase())
