@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
-import axios from 'axios'
 
 const CountrySearch = ({searchValue, onSearchChange}) => {
   return(
@@ -42,12 +41,11 @@ const CountryInfo = ({country}) => {
         ))}
       </ul>
       <img src={countryInfo.flags.svg} alt="flag" width="300" height="200" />
-
     </>
   )
 }
 
-const CountryList = ({countries, filterName}) => {
+const CountryList = ({countries, filterName, onShowCountry}) => {
   const filteredCountries = countries.filter(country => 
     country.toLowerCase().includes(filterName.toLowerCase())
   )
@@ -67,7 +65,10 @@ const CountryList = ({countries, filterName}) => {
   return(
     <>
       {filteredCountries.map((country, index) => (
-				<div key={index}> {country} </div>
+				<div key={index}>
+          {country} 
+          <button onClick={() => onShowCountry(country)}>show</button> 
+        </div>
       ))}
     </>
   )
@@ -94,10 +95,18 @@ function App() {
     setFilterName(event.target.value)
   }
 
+  const handleShowCountry = (country) => {
+    const name = country.charAt(0).toUpperCase() + country.slice(1)
+    setFilterName(name)
+  }
+
   return (
     <div>
-      <CountrySearch searchValue={filterName} onSearchChange={handleSearchName}/>
-      <CountryList countries={countryList} filterName={filterName}/>
+      <CountrySearch  searchValue={filterName} 
+                      onSearchChange={handleSearchName}/>
+      <CountryList  countries={countryList}  
+                    filterName={filterName}
+                    onShowCountry={handleShowCountry}/>
     </div>
   )
 }
