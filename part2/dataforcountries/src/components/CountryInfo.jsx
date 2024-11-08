@@ -52,7 +52,7 @@ const CountryInfo = ({ country }) => {
           <li key={`${index}${key}`}>{language}</li>
         ))}
       </ul>
-      <img src={countryInfo.flags.svg} alt="flag" width="300" height="200" />
+      <img src={countryInfo.flags.svg} alt="flag" width="200px" height="auto" />
       <h3>Weather in {countryInfo.capital}</h3>
       <div>temperature {capitalWeather.main.temp} Celsius</div>
       <img src={iconUrl} alt="weather-icon" width="100" height="100" />
