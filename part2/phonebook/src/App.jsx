@@ -87,6 +87,10 @@ const App = () => {
         const message = `Added ${newName}`
         triggerNotification(message)
       })
+      .catch(error => {
+        const message = `Invalid input: ${error.response.data.error}`
+        triggerErrorNotification(message)
+      })
 
     resetInputFields()
   }
