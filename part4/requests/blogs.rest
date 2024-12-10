@@ -19,3 +19,5 @@ content-type: application/json
 	"url": "http://def",
 	"likes": 9
 }
+###
+GET http://localhost:3003/api/blogs

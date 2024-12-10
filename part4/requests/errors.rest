@@ -1,0 +1,11 @@
+GET http://localhost:3003/api/blogs
+### UnknownEndpoint
+POST http://localhost:3003/api/blogs/error HTTP/1.1
+content-type: application/json
+
+{
+	"title": "Blog",
+	"author": "Santiago",
+	"url": "http://abc",
+	"likes": 42
+}
