@@ -6,8 +6,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "debug": "nodemon --inspect index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node --test"
   },
   "author": "Santiago Tena",
   "license": "MIT",
