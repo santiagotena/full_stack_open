@@ -156,7 +156,7 @@ describe('favorite blog', () => {
 
   ]
 
-  test('when two entries have the highest likes, returns the first one found', () => {
+  test('when two entries have the highest likes, returns the first one in array', () => {
     const result = listHelper.favoriteBlog(blogsWithTiedLikes)
     assert.deepStrictEqual(
 			result,
