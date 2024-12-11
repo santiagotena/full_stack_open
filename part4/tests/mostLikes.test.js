@@ -2,11 +2,11 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
-describe('favoriteBlog', () => {
+describe('mostLikes', () => {
   const emptyArray = []
 
   test('of empty list is empty object', () => {
-    const result = listHelper.favoriteBlog(emptyArray)
+    const result = listHelper.mostLikes(emptyArray)
     assert.deepStrictEqual(result, {})
   })
 
@@ -21,12 +21,11 @@ describe('favoriteBlog', () => {
     }
   ]
 
-  test('when list has only one blog, returns object with title, author and likes', () => {
-    const result = listHelper.favoriteBlog(listWithOneBlog)
+  test('when list has only one blog, returns object with author and total likes', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
     assert.deepStrictEqual(
 			result,
 			{
-				title: 'Go To Statement Considered Harmful',
 				author: 'Edsger W. Dijkstra',
 				likes: 5,
 			}
@@ -84,14 +83,13 @@ describe('favoriteBlog', () => {
     }
   ]
 
-  test('of a bigger list returns object with highest likes title, author and likes', () => {
-    const result = listHelper.favoriteBlog(blogs)
+  test('of a bigger list returns object with author and likes', () => {
+    const result = listHelper.mostLikes(blogs)
     assert.deepStrictEqual(
 			result,
 			{
-				title: 'Canonical string reduction',
 				author: 'Edsger W. Dijkstra',
-				likes: 12,
+				likes: 17
 			}
 		)
   })
@@ -134,7 +132,7 @@ describe('favoriteBlog', () => {
       title: 'TDD harms architecture',
       author: 'Robert C. Martin',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-      likes: 0,
+      likes: 5,
       __v: 0
     },
     {
@@ -144,26 +142,16 @@ describe('favoriteBlog', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
       likes: 2,
       __v: 0
-    },
-		{
-      _id: '5a422bc61b54a676234d17fd',
-      title: 'Test',
-      author: 'Max Mustermann',
-      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/Test.html',
-      likes: 12,
-      __v: 0
-    },
-
+    }
   ]
 
-  test('when two entries have the highest likes, returns the first one in array to fullfil criteria', () => {
-    const result = listHelper.favoriteBlog(blogsWithTiedLikes)
+  test('when two authors tie, returns the first one in array to fullfil criteria', () => {
+    const result = listHelper.mostLikes(blogsWithTiedLikes)
     assert.deepStrictEqual(
 			result,
 			{
-				title: 'Canonical string reduction',
 				author: 'Edsger W. Dijkstra',
-				likes: 12,
+				likes: 17
 			}
 		)
   })
@@ -175,30 +163,6 @@ describe('favoriteBlog', () => {
       author: 'Michael Chan',
       url: 'https://reactpatterns.com/',
       likes: 7,
-      __v: 0
-    },
-    {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
-      __v: 0
-    },
-		{
-      _id: '5a422bc61b54a676234d17fd',
-      title: 'Test',
-      author: 'Max Mustermann',
-      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/Test.html',
-      likes: 12,
-      __v: 0
-    },
-    {
-      _id: '5a422b3a1b54a676234d17f9',
-      title: 'Canonical string reduction',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-      likes: 12,
       __v: 0
     },
     {
@@ -214,7 +178,7 @@ describe('favoriteBlog', () => {
       title: 'TDD harms architecture',
       author: 'Robert C. Martin',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-      likes: 0,
+      likes: 5,
       __v: 0
     },
     {
@@ -225,16 +189,31 @@ describe('favoriteBlog', () => {
       likes: 2,
       __v: 0
     },
+		{
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0
+    },
+    {
+      _id: '5a422b3a1b54a676234d17f9',
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12,
+      __v: 0
+    },
   ]
 
-  test('when two entries have the highest likes, returns the first one in array to fullfil criteria confirmation', () => {
-    const result = listHelper.favoriteBlog(blogsWithTiedLikes2)
+  test('when two authors tie, returns the first one in array to fullfil criteria (confirmation)', () => {
+    const result = listHelper.mostLikes(blogsWithTiedLikes2)
     assert.deepStrictEqual(
 			result,
 			{
-				title: 'Test',
-				author: 'Max Mustermann',
-				likes: 12,
+				author: 'Robert C. Martin',
+				likes: 17
 			}
 		)
   })
