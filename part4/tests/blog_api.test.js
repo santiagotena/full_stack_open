@@ -42,7 +42,7 @@ test('a blog entry can be added', async() => {
     .send(newBlog)
     .expect(201)
 
-  const blogsAtEnd = await helper.notesInDb()
+  const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
   const titles = blogsAtEnd.map(n => n.title)
@@ -61,7 +61,7 @@ test('the likes property defaults to zero when missing from the request', async(
     .send(newBlog)
     .expect(201)
 
-  const blogsAtEnd = await helper.notesInDb()
+  const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
 })
 
@@ -88,8 +88,24 @@ test('blog without title or url are not added', async () => {
     .send(noUrlBlog)
     .expect(400)
 
-  const blogsAtEnd = await helper.notesInDb()
+  const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+test.only('deletes a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  assert(!titles.includes(blogToDelete.title))
 })
 
 after(async () => {
