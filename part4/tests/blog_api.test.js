@@ -17,7 +17,17 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
+test('there are two blogs', async() => {
+  const response = await api.get('/api/blogs')
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
 
+test.only('blogs should have a unique identifier property named "id"', async () => {
+  const response = await api.get('/api/blogs')
+  response.body.forEach((item) => {
+    assert.ok('id' in item)
+  })
+})
 
 after(async () => {
   await mongoose.connection.close()
