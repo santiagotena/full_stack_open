@@ -29,7 +29,7 @@ test('blogs should have a unique identifier property named "id"', async () => {
   })
 })
 
-test.only('a blog entry can be added', async() => {
+test('a blog entry can be added', async() => {
   const newBlog = {
     title: 'test title',
     author: 'John Doe',
@@ -42,11 +42,54 @@ test.only('a blog entry can be added', async() => {
     .send(newBlog)
     .expect(201)
 
-  const notesAtEnd = await helper.notesInDb()
-  assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length + 1)
+  const blogsAtEnd = await helper.notesInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-  const titles = notesAtEnd.map(n => n.title)
+  const titles = blogsAtEnd.map(n => n.title)
   assert(titles.includes('test title'))
+})
+
+test('the likes property defaults to zero when missing from the request', async() => {
+  const newBlog = {
+    title: 'no likes',
+    author: 'John Doe',
+    url: 'url.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+
+  const blogsAtEnd = await helper.notesInDb()
+  assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+})
+
+test('blog without title or url are not added', async () => {
+  const noTitleBlog = {
+    author: 'John Doe',
+    url: 'url.com',
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noTitleBlog)
+    .expect(400)
+
+  const noUrlBlog = {
+    title: 'test title',
+    author: 'John Doe',
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noUrlBlog)
+    .expect(400)
+
+  const blogsAtEnd = await helper.notesInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
 after(async () => {
