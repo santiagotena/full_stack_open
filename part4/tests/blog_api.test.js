@@ -92,7 +92,7 @@ test('blog without title or url are not added', async () => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
-test.only('deletes a blog', async () => {
+test('deletes a blog', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToDelete = blogsAtStart[0]
 
@@ -106,6 +106,32 @@ test.only('deletes a blog', async () => {
 
   const titles = blogsAtEnd.map(r => r.title)
   assert(!titles.includes(blogToDelete.title))
+})
+
+test('updates a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const updatedBlog = {
+    title: 'Updated Title',
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
+    likes: blogToUpdate.likes + 1,
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+
+  const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+  assert(updatedBlogInDb)
+  assert.strictEqual(updatedBlogInDb.title, updatedBlog.title)
+  assert.strictEqual(updatedBlogInDb.likes, updatedBlog.likes)
 })
 
 after(async () => {
