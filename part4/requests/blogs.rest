@@ -2,22 +2,13 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2Nzc3MDk5YWQxMjFkOGVmZTZkOTJlOGYiLCJpYXQiOjE3MzYxMTE4NTZ9.johngm3UuNA_RqyLrr02TEr1zePOpBVY2DT7XxbOxaU
 
 {
-	"title": "Blog",
-	"author": "Santiago",
-	"url": "http://abc",
-	"likes": 42
-}
-###
-POST http://localhost:3003/api/blogs HTTP/1.1
-content-type: application/json
-
-{
-	"title": "Blog 2, the sequel",
+	"title": "Single page apps use token based auth",
 	"author": "Tena",
-	"url": "http://def",
-	"likes": 9
+	"url": "http://url",
+	"likes": 42
 }
 ###
 GET http://localhost:3003/api/blogs
