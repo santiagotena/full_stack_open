@@ -11,130 +11,129 @@ const helper = require('./test_helper')
 const User = require('../models/user')
 const Blog = require('../models/blog')
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
+describe('when there is initially some notes saved', () => {
 
-  const blogObjects = helper.initialBlogs
-    .map(blog => new Blog(blog))
-  const promiseArray = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArray)
-})
-
-test('there are two blogs', async() => {
-  const response = await api.get('/api/blogs')
-  assert.strictEqual(response.body.length, helper.initialBlogs.length)
-})
-
-test('blogs should have a unique identifier property named "id"', async () => {
-  const response = await api.get('/api/blogs')
-  response.body.forEach((item) => {
-    assert.ok('id' in item)
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
   })
-})
 
-test('a blog entry can be added', async() => {
-  const newBlog = {
-    title: 'test title',
-    author: 'John Doe',
-    url: 'url.com',
-    likes: 5,
-  }
+  test('there are two blogs', async() => {
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+  })
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
+  test('blogs should have a unique identifier property named "id"', async () => {
+    const response = await api.get('/api/blogs')
+    response.body.forEach((item) => {
+      assert.ok('id' in item)
+    })
+  })
 
-  const blogsAtEnd = await helper.blogsInDb()
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  test('a blog entry can be added', async() => {
+    const newBlog = {
+      title: 'test title',
+      author: 'John Doe',
+      url: 'url.com',
+      likes: 5,
+    }
 
-  const titles = blogsAtEnd.map(n => n.title)
-  assert(titles.includes('test title'))
-})
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
 
-test('the likes property defaults to zero when missing from the request', async() => {
-  const newBlog = {
-    title: 'no likes',
-    author: 'John Doe',
-    url: 'url.com',
-  }
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
+    const titles = blogsAtEnd.map(n => n.title)
+    assert(titles.includes('test title'))
+  })
 
-  const blogsAtEnd = await helper.blogsInDb()
-  assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
-})
+  test('the likes property defaults to zero when missing from the request', async() => {
+    const newBlog = {
+      title: 'no likes',
+      author: 'John Doe',
+      url: 'url.com',
+    }
 
-test('blog without title or url are not added', async () => {
-  const noTitleBlog = {
-    author: 'John Doe',
-    url: 'url.com',
-    likes: 5,
-  }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
 
-  await api
-    .post('/api/blogs')
-    .send(noTitleBlog)
-    .expect(400)
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+  })
 
-  const noUrlBlog = {
-    title: 'test title',
-    author: 'John Doe',
-    likes: 5,
-  }
+  test('blog without title or url are not added', async () => {
+    const noTitleBlog = {
+      author: 'John Doe',
+      url: 'url.com',
+      likes: 5,
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(noUrlBlog)
-    .expect(400)
+    await api
+      .post('/api/blogs')
+      .send(noTitleBlog)
+      .expect(400)
 
-  const blogsAtEnd = await helper.blogsInDb()
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-})
+    const noUrlBlog = {
+      title: 'test title',
+      author: 'John Doe',
+      likes: 5,
+    }
 
-test('deletes a blog', async () => {
-  const blogsAtStart = await helper.blogsInDb()
-  const blogToDelete = blogsAtStart[0]
+    await api
+      .post('/api/blogs')
+      .send(noUrlBlog)
+      .expect(400)
 
-  await api
-    .delete(`/api/blogs/${blogToDelete.id}`)
-    .expect(204)
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
 
-  const blogsAtEnd = await helper.blogsInDb()
+  test('deletes a blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
 
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
 
-  const titles = blogsAtEnd.map(r => r.title)
-  assert(!titles.includes(blogToDelete.title))
-})
+    const blogsAtEnd = await helper.blogsInDb()
 
-test('updates a blog', async () => {
-  const blogsAtStart = await helper.blogsInDb()
-  const blogToUpdate = blogsAtStart[0]
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 
-  const updatedBlog = {
-    title: 'Updated Title',
-    author: blogToUpdate.author,
-    url: blogToUpdate.url,
-    likes: blogToUpdate.likes + 1,
-  }
+    const titles = blogsAtEnd.map(r => r.title)
+    assert(!titles.includes(blogToDelete.title))
+  })
 
-  const response = await api
-    .put(`/api/blogs/${blogToUpdate.id}`)
-    .send(updatedBlog)
-    .expect(200)
+  test('updates a blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
 
-  const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = {
+      title: 'Updated Title',
+      author: blogToUpdate.author,
+      url: blogToUpdate.url,
+      likes: blogToUpdate.likes + 1,
+    }
 
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
 
-  const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
-  assert(updatedBlogInDb)
-  assert.strictEqual(updatedBlogInDb.title, updatedBlog.title)
-  assert.strictEqual(updatedBlogInDb.likes, updatedBlog.likes)
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+
+    const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+    assert(updatedBlogInDb)
+    assert.strictEqual(updatedBlogInDb.title, updatedBlog.title)
+    assert.strictEqual(updatedBlogInDb.likes, updatedBlog.likes)
+  })
 })
 
 describe('when there is initially one user at db', () => {
