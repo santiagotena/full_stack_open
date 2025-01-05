@@ -1,8 +1,16 @@
 GET http://localhost:3003/api/blogs
 ###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+	"username": "stena",
+	"password": "password"
+}
+###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2Nzc3MDk5YWQxMjFkOGVmZTZkOTJlOGYiLCJpYXQiOjE3MzYxMTE4NTZ9.johngm3UuNA_RqyLrr02TEr1zePOpBVY2DT7XxbOxaU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2NzdhZmNjNWZkMWJlNzI0MGU1MWZiNjYiLCJpYXQiOjE3MzYxMTM1Mzd9.VVUngdexgOOvbBnOA35S1ZB7kZdB11q5HszL7IXiKXk
 
 {
 	"title": "Single page apps use token based auth",

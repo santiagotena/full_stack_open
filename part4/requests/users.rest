@@ -17,3 +17,5 @@ content-type: application/json
     "name": "Blanca Hernandez",
     "password": "password2"
 }
+###
+GET http://localhost:3003/api/users
