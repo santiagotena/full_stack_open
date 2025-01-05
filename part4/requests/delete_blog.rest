@@ -10,7 +10,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2NzdhZmNjNWZkMWJlNzI0MGU1MWZiNjYiLCJpYXQiOjE3MzYxMTUzNTl9.JPNFdMzXJuOIaFV4J3XymbanTL-qKPiNoOP_ksNnX1w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2NzdhZmNjNWZkMWJlNzI0MGU1MWZiNjYiLCJpYXQiOjE3MzYxMTczODJ9.o88dBZobCV9P5Z18G6DiXPdIGfuvCYEuu750zaaG-Hk
 
 {
 	"title": "Delete this",
@@ -19,8 +19,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0Z
 	"likes": 4
 }
 ###
-DELETE  http://localhost:3003/api/blogs/677b0442caa4d32a8cfaf8a0 HTTP/1.1
+DELETE  http://localhost:3003/api/blogs/677b0ca17e2f8e3f8ea91031 HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2NzdhZmNjNWZkMWJlNzI0MGU1MWZiNjYiLCJpYXQiOjE3MzYxMTUzNTl9.JPNFdMzXJuOIaFV4J3XymbanTL-qKPiNoOP_ksNnX1w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0ZW5hIiwiaWQiOiI2NzdhZmNjNWZkMWJlNzI0MGU1MWZiNjYiLCJpYXQiOjE3MzYxMTczODJ9.o88dBZobCV9P5Z18G6DiXPdIGfuvCYEuu750zaaG-Hk
 ###
 GET http://localhost:3003/api/blogs
