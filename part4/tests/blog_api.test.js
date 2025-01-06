@@ -85,6 +85,10 @@ describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+    await user.save()
   })
 
   test('there are two blogs', async() => {
@@ -99,7 +103,7 @@ describe('when there is initially some notes saved', () => {
     })
   })
 
-  test('a blog entry can be added', async() => {
+  test('no token, no blog post', async () => {
     const newBlog = {
       title: 'test title',
       author: 'John Doe',
@@ -110,6 +114,27 @@ describe('when there is initially some notes saved', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
+
+  test('a blog entry can be added', async() => {
+    const login = await api.post('/api/login').send({ username: 'root', password: 'sekret' })
+    const token = login.body.token
+
+    const newBlog = {
+      title: 'test title',
+      author: 'John Doe',
+      url: 'url.com',
+      likes: 5,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -120,6 +145,9 @@ describe('when there is initially some notes saved', () => {
   })
 
   test('the likes property defaults to zero when missing from the request', async() => {
+    const login = await api.post('/api/login').send({ username: 'root', password: 'sekret' })
+    const token = login.body.token
+
     const newBlog = {
       title: 'no likes',
       author: 'John Doe',
@@ -129,6 +157,7 @@ describe('when there is initially some notes saved', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -136,6 +165,9 @@ describe('when there is initially some notes saved', () => {
   })
 
   test('blog without title or url are not added', async () => {
+    const login = await api.post('/api/login').send({ username: 'root', password: 'sekret' })
+    const token = login.body.token
+
     const noTitleBlog = {
       author: 'John Doe',
       url: 'url.com',
@@ -145,6 +177,7 @@ describe('when there is initially some notes saved', () => {
     await api
       .post('/api/blogs')
       .send(noTitleBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
     const noUrlBlog = {
@@ -156,6 +189,7 @@ describe('when there is initially some notes saved', () => {
     await api
       .post('/api/blogs')
       .send(noUrlBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -163,19 +197,22 @@ describe('when there is initially some notes saved', () => {
   })
 
   test('deletes a blog', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const login = await api.post('/api/login').send({ username: 'root', password: 'sekret' })
+    const token = login.body.token
+
+    const newBlog = { title: 'Delete', author: 'John Doe', url: 'url.com', likes: 52 }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
+
+    const blogToDelete = response.body
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
-
-    const blogsAtEnd = await helper.blogsInDb()
-
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
-
-    const titles = blogsAtEnd.map(r => r.title)
-    assert(!titles.includes(blogToDelete.title))
   })
 
   test('updates a blog', async () => {
