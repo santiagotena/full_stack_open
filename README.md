@@ -1,16 +1,16 @@
 ## Index
 
-Part0 - Fundamentals of Web apps
-Part1 - Introduction to React
-Part2 - Communicating with server
-Part3 - Programming a server with NodeJS and Express
-Part4 - Testing Express servers, user administration
-Part5 - Testing React apps
-Part6 - Advanced state management
-Part7 - React router, custom hooks, styling app with CSS and webpack
-Part8 - GraphQL
-Part9 - Typescript
-Part10 - React Native
-Part11 - CI/CD
-Part12 - Containers
-Part13 - Using relational database
+Part0 - Fundamentals of Web apps<br>
+Part1 - Introduction to React<br>
+Part2 - Communicating with server<br>
+Part3 - Programming a server with NodeJS and Express<br>
+Part4 - Testing Express servers, user administration<br>
+Part5 - Testing React apps<br>
+Part6 - Advanced state management<br>
+Part7 - React router, custom hooks, styling app with CSS and webpack<br>
+Part8 - GraphQL<br>
+Part9 - Typescript<br>
+Part10 - React Native<br>
+Part11 - CI/CD<br>
+Part12 - Containers<br>
+Part13 - Using relational database<br>
